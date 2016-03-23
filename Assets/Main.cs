@@ -58,16 +58,30 @@ public class Main : MonoBehaviour
 	{
 		DOTween.Init();
 
-		for (int i = 0; i < excelData.dataArray.Length; i++)
-			personnagesList.Add (excelData.dataArray [i].Personnage);
-
-		for (int i = 0; i < excelData.dataArray.Length; i++)
-			actionsList.Add (excelData.dataArray [i].Action);
-
-		for (int i = 0; i < excelData.dataArray.Length; i++)
-			contextesList.Add (excelData.dataArray [i].Contexte);
+		GetExcelData ();
 
 		chosenTime = 30;
+	}
+
+	void GetExcelData ()
+	{
+		for (int i = 0; i < excelData.dataArray.Length; i++)
+		{
+			if(excelData.dataArray [i].Personnage != "")
+				personnagesList.Add (excelData.dataArray [i].Personnage);
+		}
+
+		for (int i = 0; i < excelData.dataArray.Length; i++)
+		{
+			if(excelData.dataArray [i].Action != "")
+				actionsList.Add (excelData.dataArray [i].Action);
+		}
+
+		for (int i = 0; i < excelData.dataArray.Length; i++)
+		{
+			if(excelData.dataArray [i].Contexte != "")
+				contextesList.Add (excelData.dataArray [i].Contexte);
+		}
 	}
 
 	void Update ()
