@@ -29,6 +29,7 @@ public class Main : MonoBehaviour
 
 	public float timerCurrentTime;
 
+
 	[Header("Buttons")]
 	public GameObject playButton;
 	public GameObject pauseButton;
@@ -50,8 +51,12 @@ public class Main : MonoBehaviour
 
 	public bool shaking;
 
-	private bool pause = false;
-	private bool timerFinished = false;
+	public float vibrationDuration;
+
+	public bool pause = false;
+	public bool timerFinished = false;
+
+	private bool vibrating;
 
 	// Use this for initialization
 	void Start () 
@@ -111,6 +116,50 @@ public class Main : MonoBehaviour
 			shaking = false;
 			CameraShaking();
 		}
+
+		if(pauseButton.activeSelf == true)
+		{
+			switch (timerText.text)
+			{
+			case "0:05":
+				if (!vibrating)
+					StartCoroutine (VibrationWait (200, 0.8f));
+				break;
+			case "0:04":
+				if (!vibrating)
+					StartCoroutine (VibrationWait (200, 0.75f));
+				break;
+			case "0:03":
+				if (!vibrating)
+					StartCoroutine (VibrationWait (200, 0.7f));
+				break;
+			case "0:02":
+				if (!vibrating)
+					StartCoroutine (VibrationWait (200, 0.65f));
+				break;
+			case "0:01":
+				if (!vibrating)
+					StartCoroutine (VibrationWait (200, 0.6f));
+				break;
+			case "0:00":
+				if (!vibrating)
+					StartCoroutine (VibrationWait (1000, 0.4f));
+				break;
+			}
+		}
+	}
+
+	IEnumerator VibrationWait (long milliseconds, float waitTime)
+	{
+		vibrating = true;
+
+		Vibration.Vibrate (milliseconds);
+
+		yield return new WaitForSeconds (waitTime);
+
+		Vibration.Cancel ();
+
+		vibrating = false;
 	}
 
 	void ActivateFleches ()
@@ -228,11 +277,34 @@ public class Main : MonoBehaviour
 
 	public void RandomWords ()
 	{
-		personnageText.text = personnagesList [UnityEngine.Random.Range (0, personnagesList.Count)];
+		string personnageTemp;
+		string actionTemp;
+		string contexteTemp;
 
-		actionText.text = actionsList [UnityEngine.Random.Range (0, actionsList.Count)];
+		do
+		{
+			personnageTemp = personnagesList [UnityEngine.Random.Range (0, personnagesList.Count)];
+		}
+		while(personnageTemp == personnageText.text);
 
-		contexteText.text = contextesList [UnityEngine.Random.Range (0, contextesList.Count)];
+		do
+		{
+			actionTemp = actionsList [UnityEngine.Random.Range (0, actionsList.Count)];
+		}
+		while(actionTemp == actionText.text);
+
+		do
+		{
+			contexteTemp = contextesList [UnityEngine.Random.Range (0, contextesList.Count)];
+		}
+		while(contexteTemp == contexteText.text);
+
+
+		personnageText.text = personnageTemp;
+
+		actionText.text = actionTemp;
+
+		contexteText.text = contexteTemp;
 	}
 
 	public void Pause ()
