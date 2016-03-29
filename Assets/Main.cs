@@ -44,6 +44,7 @@ public class Main : MonoBehaviour
 
 	[Header("Screen Shake")]
 	public RectTransform menu;
+	public RectTransform sprites;
 	public float shakeDuration = 0.5f;
 	public Vector3 shakeStrenth = new Vector3 (1, 1, 0);
 	public int shakeVibrato = 100;
@@ -378,7 +379,10 @@ public class Main : MonoBehaviour
 		shaking = false;
 
 		if(!DOTween.IsTweening("Shake"))
+		{
 			menu.DOShakePosition(shakeDuration, shakeStrenth, shakeVibrato, shakeRandomness).SetId("Shake");
+			sprites.DOShakePosition(shakeDuration, shakeStrenth, shakeVibrato, shakeRandomness).SetId("Shake");
+		}
 	}
 }
 
