@@ -55,6 +55,7 @@
      <Compile Include="Assets\QuickSheet\Util\Cloner.cs" />
      <Compile Include="Assets\QuickSheet\Util\CsvParser.cs" />
      <Compile Include="Assets\QuickSheet\Util\Singleton.cs" />
+     <Compile Include="Assets\VibrationManager.cs" />
      <Compile Include="Assets\VibrationPlugin\Sources\Vibration.cs" />
      <Compile Include="Assets\VibrationPlugin\Sources\VibrationActivity.cs" />
      <None Include="Assets\Plugins\Android\AndroidManifest.xml" />

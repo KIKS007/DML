@@ -20,13 +20,10 @@ public class Main : MonoBehaviour
 
 	[Header("Timer")]
 	public Slider timerSlider;
-
+	public Animator barreFond;
 	public Text timerText;
-
 	public Slider timerChoiceSlider;
-
 	public float chosenTime;
-
 	public float timerCurrentTime;
 
 
@@ -50,14 +47,25 @@ public class Main : MonoBehaviour
 	public int shakeVibrato = 100;
 	public float shakeRandomness = 45;
 
-	public bool shaking;
+	[Header("Vibration Durations")]
+	public long simpleInput = 10;
+	public long wrongInput = 250;
+	public long lastsSeconds = 400;
+	public long theLastSecond = 2000;
 
-	public float vibrationDuration;
+	private bool shaking;
 
-	public bool pause = false;
-	public bool timerFinished = false;
+	private bool pause = false;
+	private bool timerFinished = false;
 
 	private bool vibrating;
+
+	private bool five = false;
+	private bool four = false;
+	private bool three = false;
+	private bool two = false;
+	private bool one = false;
+	private bool zero = false;
 
 	// Use this for initialization
 	void Start () 
@@ -67,6 +75,9 @@ public class Main : MonoBehaviour
 		GetExcelData ();
 
 		chosenTime = 30;
+
+		barreFond.StartPlayback ();
+		barreFond.Play ("Barre Fond Animation", 0, 0.999f);
 	}
 
 	void GetExcelData ()
@@ -119,48 +130,69 @@ public class Main : MonoBehaviour
 		}
 
 		if(pauseButton.activeSelf == true)
-		{
-			switch (timerText.text)
-			{
-			case "0:05":
-				if (!vibrating)
-					StartCoroutine (VibrationWait (200, 0.8f));
-				break;
-			case "0:04":
-				if (!vibrating)
-					StartCoroutine (VibrationWait (200, 0.75f));
-				break;
-			case "0:03":
-				if (!vibrating)
-					StartCoroutine (VibrationWait (200, 0.7f));
-				break;
-			case "0:02":
-				if (!vibrating)
-					StartCoroutine (VibrationWait (200, 0.65f));
-				break;
-			case "0:01":
-				if (!vibrating)
-					StartCoroutine (VibrationWait (200, 0.6f));
-				break;
-			case "0:00":
-				if (!vibrating)
-					StartCoroutine (VibrationWait (1000, 0.4f));
-				break;
-			}
-		}
+			LastSeconds ();
 	}
 
-	IEnumerator VibrationWait (long milliseconds, float waitTime)
+	void LastSeconds ()
 	{
-		vibrating = true;
+		switch (timerText.text)
+		{
+		case "0:05":
+			
+			if(!five)
+			{
+				five = true;
+				Vibration.Vibrate (lastsSeconds);
+				CameraShaking ();
+			}
 
-		Vibration.Vibrate (milliseconds);
+			break;
+		case "0:04":
+			if(!four)
+			{
+				four = true;
+				Vibration.Vibrate (lastsSeconds);
+				CameraShaking ();
+			}
 
-		yield return new WaitForSeconds (waitTime);
+			break;
+		case "0:03":
+			if(!three)
+			{
+				three = true;
+				Vibration.Vibrate (lastsSeconds);
+				CameraShaking ();
+			}
 
-		Vibration.Cancel ();
+			break;
+		case "0:02":
+			if(!two)
+			{
+				two = true;
+				Vibration.Vibrate (lastsSeconds);
+				CameraShaking ();
+			}
 
-		vibrating = false;
+			break;
+		case "0:01":
+			if(!one)
+			{
+				one = true;
+				Vibration.Vibrate (lastsSeconds);
+				CameraShaking ();
+			}
+
+			break;
+		case "0:00":
+			if(!zero)
+			{
+				zero = true;
+				Vibration.Vibrate (theLastSecond);
+				CameraShaking ();
+			}
+
+			break;
+		}
 	}
 
 	void ActivateFleches ()
@@ -192,7 +224,9 @@ public class Main : MonoBehaviour
 		//update the label value
 		timerText.text = string.Format ("{0:0}:{1:00}", minutes, seconds);
 
-		timerSlider.value = timerCurrentTime * 100 / chosenTime;
+		//timerSlider.value = timerCurrentTime * 100 / chosenTime;
+		if((timerCurrentTime / chosenTime) < 1)
+			barreFond.Play ("Barre Fond Animation", 0, (timerCurrentTime / chosenTime));
 
 		yield return new WaitForSeconds (0.1f);
 
@@ -248,6 +282,15 @@ public class Main : MonoBehaviour
 
 	public void TimerUp ()
 	{
+		if(timerText.text == "0:00")
+		{
+			int minutes2 = (int) chosenTime / 60; //Divide the guiTime by sixty to get the minutes.
+			float seconds2 = chosenTime % 60; //Use the euclidean division for the seconds.
+
+			//update the label value
+			timerText.text = string.Format ("{0:0}:{1:00}", minutes2, seconds2);
+		}
+
 		chosenTime += 30;
 
 		int minutes = (int) chosenTime / 60; //Divide the guiTime by sixty to get the minutes.
@@ -263,6 +306,16 @@ public class Main : MonoBehaviour
 
 	public void TimerDown ()
 	{
+		if(timerText.text == "0:00")
+		{
+			int minutes2 = (int) chosenTime / 60; //Divide the guiTime by sixty to get the minutes.
+			float seconds2 = chosenTime % 60; //Use the euclidean division for the seconds.
+
+			//update the label value
+			timerText.text = string.Format ("{0:0}:{1:00}", minutes2, seconds2);
+		}
+			
+
 		chosenTime -= 30;
 
 		int minutes = (int) chosenTime / 60; //Divide the guiTime by sixty to get the minutes.
@@ -362,7 +415,8 @@ public class Main : MonoBehaviour
 		//update the label value
 		timerText.text = string.Format ("{0:0}:{1:00}", minutes, seconds);
 
-		timerSlider.value = 100;
+		//timerSlider.value = 100;
+		barreFond.Play ("Barre Fond Animation", 0, 0.999f);
 
 		RandomWords ();
 
@@ -372,6 +426,11 @@ public class Main : MonoBehaviour
 	public void Quit ()
 	{
 		Application.Quit ();
+	}
+
+	public void VibrateSimple ()
+	{
+		Vibration.Vibrate (simpleInput);
 	}
 
 	public void CameraShaking ()
@@ -384,5 +443,6 @@ public class Main : MonoBehaviour
 			sprites.DOShakePosition(shakeDuration, shakeStrenth, shakeVibrato, shakeRandomness).SetId("Shake");
 		}
 	}
+
 }
 
