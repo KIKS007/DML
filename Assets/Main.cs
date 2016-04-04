@@ -53,6 +53,13 @@ public class Main : MonoBehaviour
 	public long lastsSeconds = 400;
 	public long theLastSecond = 2000;
 
+	[Header ("Sounds")]
+	public AudioSource startSound;
+	public AudioSource bipSound;
+	public AudioSource criSound;
+	public AudioSource[] pencilSound = new AudioSource[3];
+
+
 	private bool shaking;
 
 	private bool pause = false;
@@ -115,6 +122,7 @@ public class Main : MonoBehaviour
 			pauseButton.SetActive (false);
 
 			nouveauGrosButton.SetActive (true);
+			quitterButton.SetActive (true);
 			nouveauButton.SetActive (false);
 		}
 
@@ -144,6 +152,7 @@ public class Main : MonoBehaviour
 				five = true;
 				Vibration.Vibrate (lastsSeconds);
 				CameraShaking ();
+				bipSound.Play ();
 			}
 
 			break;
@@ -153,6 +162,7 @@ public class Main : MonoBehaviour
 				four = true;
 				Vibration.Vibrate (lastsSeconds);
 				CameraShaking ();
+				bipSound.Play ();
 			}
 
 			break;
@@ -162,6 +172,7 @@ public class Main : MonoBehaviour
 				three = true;
 				Vibration.Vibrate (lastsSeconds);
 				CameraShaking ();
+				bipSound.Play ();
 			}
 
 			break;
@@ -171,6 +182,7 @@ public class Main : MonoBehaviour
 				two = true;
 				Vibration.Vibrate (lastsSeconds);
 				CameraShaking ();
+				bipSound.Play ();
 			}
 
 			break;
@@ -180,6 +192,7 @@ public class Main : MonoBehaviour
 				one = true;
 				Vibration.Vibrate (lastsSeconds);
 				CameraShaking ();
+				bipSound.Play ();
 			}
 
 			break;
@@ -189,6 +202,7 @@ public class Main : MonoBehaviour
 				zero = true;
 				Vibration.Vibrate (theLastSecond);
 				CameraShaking ();
+				criSound.Play ();
 			}
 
 			break;
@@ -387,6 +401,9 @@ public class Main : MonoBehaviour
 		quitterButton.SetActive (false);
 		nouveauButton.SetActive (false);
 
+		if(timerCurrentTime == chosenTime)
+			startSound.Play ();
+
 		StartCoroutine (Timer ());
 
 		CameraShaking ();
@@ -421,6 +438,8 @@ public class Main : MonoBehaviour
 		RandomWords ();
 
 		CameraShaking ();
+
+		pencilSound [UnityEngine.Random.Range (0, pencilSound.Length)].Play ();
 	}
 
 	public void Quit ()
